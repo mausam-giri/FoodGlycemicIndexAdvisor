@@ -13,7 +13,10 @@ function App() {
   const [response, setResponse] = useState<ResponseItemType[]>([]);
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [errorRes, setErrorRes] = useState(null);
+  const [errorRes, setErrorRes] = useState({
+    error: false,
+    message: "",
+  });
 
   const url = "https://mausamgiri.pythonanywhere.com/airesponse";
 
@@ -36,10 +39,32 @@ function App() {
       setResponse(res.data);
       setLoading(false);
     } catch (error: any) {
-      setErrorRes(error.response ? error.response.data : "Error");
+      setErrorRes({
+        error: true,
+        message: error.response ? error.response.data : "Error",
+      });
       console.log(error.response ? error.response.data : "Error");
       setLoading(false);
     }
+  }
+
+  function isPexelsUrl(url: string) {
+    return url.includes("https://images.pexels.com");
+  }
+
+  function handleImage(url: string) {
+    if (isPexelsUrl(url)) {
+      const modifier = "?auto=compress&cs=tinysrgb&w=480&h=400&dpr=1";
+      const base_url = url.split("?");
+      const modified = base_url + modifier;
+      setImageUrl(modified);
+    }
+    setImageUrl("");
+    setErrorRes({
+      error: true,
+      message:
+        "Image domain url not supported. Visit: https://www.pexels.com/search/food/",
+    });
   }
 
   return (
@@ -53,11 +78,12 @@ function App() {
               name="image_url"
               id="image_url"
               value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
+              onChange={(e) => handleImage(e.target.value)}
               placeholder="Enter image URL"
             />
             <p className="img_instruction">
-              (Only JPG, JPEG files allowed. Max Size: 3 Mb)
+              (Images from Pexels is supported now.{" "}
+              <a href="https://www.pexels.com/search/food/">Click here</a> )
             </p>
             {imageUrl && <img src={imageUrl} alt="image placeholder" />}
             <button type="submit">Get Result</button>
@@ -66,13 +92,13 @@ function App() {
         {loading && (
           <div className="result-wrapper fetch-result">Fetching Result ...</div>
         )}
-        {!loading && errorRes && (
+        {!loading && errorRes.error && (
           <div className="result-wrapper error-result">
-            Some error occured: <pre>{JSON.stringify(errorRes)}</pre>
+            Some error occured: <pre>{JSON.stringify(errorRes.message)}</pre>
           </div>
         )}
         {/* {response && JSON.stringify(response)} */}
-        {!loading && !errorRes && response.length > 1 && (
+        {!loading && !errorRes.error && response.length > 1 && (
           <div className="result-wrapper">
             {response &&
               response.map((item: ResponseItemType, index) => (

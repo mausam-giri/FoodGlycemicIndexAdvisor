@@ -37,7 +37,7 @@ error-result {
   border-radius: 1rem;
 }
 .wrapper form .img_instruction {
-  font-size: 0.725rem;
+  font-size: 14px;
   font-style: italic;
 }
 .wrapper form button {

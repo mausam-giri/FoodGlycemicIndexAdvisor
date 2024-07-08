@@ -85,7 +85,10 @@ function App() {
             />
             <p className="img_instruction">
               (Images from Pexels is supported now.{" "}
-              <a href="https://www.pexels.com/search/food/">Click here</a> )
+              <a href="https://www.pexels.com/search/food/" target="_blank">
+                Click here
+              </a>{" "}
+              )
             </p>
             {imageUrl && <img src={imageUrl} alt="image placeholder" />}
             <button type="submit">Get Result</button>

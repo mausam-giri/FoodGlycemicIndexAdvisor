@@ -53,18 +53,18 @@ function App() {
   }
 
   function handleImage(url: string) {
-    if (isPexelsUrl(url)) {
-      const modifier = "?auto=compress&cs=tinysrgb&w=480&h=400&dpr=1";
-      const base_url = url.split("?");
-      const modified = base_url + modifier;
-      setImageUrl(modified);
+    if (!isPexelsUrl(url)) {
+      setImageUrl("");
+      setErrorRes({
+        error: true,
+        message:
+          "Image domain url not supported. Visit: https://www.pexels.com/search/food/",
+      });
     }
-    setImageUrl("");
-    setErrorRes({
-      error: true,
-      message:
-        "Image domain url not supported. Visit: https://www.pexels.com/search/food/",
-    });
+    const modifier = "?auto=compress&cs=tinysrgb&w=480&h=400&dpr=1";
+    const base_url = url.split("?");
+    const modified = base_url + modifier;
+    setImageUrl(modified);
   }
 
   return (

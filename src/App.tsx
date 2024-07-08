@@ -37,13 +37,14 @@ function App() {
         }
       );
       setResponse(res.data);
+      setErrorRes({ error: false, message: "" });
       setLoading(false);
     } catch (error: any) {
+      const errorMessage = error.response ? error.response.data : error.message;
       setErrorRes({
         error: true,
-        message: error.response ? error.response.data : "Error",
+        message: errorMessage,
       });
-      console.log(error.response ? error.response.data : "Error");
       setLoading(false);
     }
   }
@@ -60,9 +61,10 @@ function App() {
         message:
           "Image domain url not supported. Visit: https://www.pexels.com/search/food/",
       });
+      return;
     }
     const modifier = "?auto=compress&cs=tinysrgb&w=480&h=400&dpr=1";
-    const base_url = url.split("?");
+    const base_url = url.split("?")[0];
     const modified = base_url + modifier;
     setImageUrl(modified);
   }

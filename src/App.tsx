@@ -46,6 +46,7 @@ function App() {
     <>
       <div className="container">
         <div className="wrapper">
+          <h1 className="app-heading">Food Glycemic Index</h1>
           <form onSubmit={handleSubmit}>
             <input
               type="url"
@@ -62,14 +63,16 @@ function App() {
             <button type="submit">Get Result</button>
           </form>
         </div>
-        {loading && <div className="result-wrapper">Fetching Result ...</div>}
+        {loading && (
+          <div className="result-wrapper fetch-result">Fetching Result ...</div>
+        )}
         {!loading && errorRes && (
-          <div className="result-wrapper">
+          <div className="result-wrapper error-result">
             Some error occured: <pre>{JSON.stringify(errorRes)}</pre>
           </div>
         )}
         {/* {response && JSON.stringify(response)} */}
-        {!loading && !errorRes && (
+        {!loading && !errorRes && response.length > 1 && (
           <div className="result-wrapper">
             {response &&
               response.map((item: ResponseItemType, index) => (
@@ -91,10 +94,13 @@ function App() {
           </div>
         )}
 
-        <div className="result-wrapper sum-gi">
-          Total Glycemic Index:{" "}
-          {response.reduce((acc, item) => acc + Number(item.gi), 0)}
-        </div>
+        {!loading && response.length > 1 && (
+          <div className="result-wrapper sum-gi">
+            Total Glycemic Index:{" "}
+            {response &&
+              response.reduce((acc, item) => acc + Number(item.gi), 0)}
+          </div>
+        )}
       </div>
     </>
   );
